@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './typeorm/entitys/users';
-import { Group } from './typeorm/entitys/group';
-import { Messages } from './typeorm/entitys/messages';
+import { User } from './users/users';
+import { Group } from './group/groups';
+import { Messages } from './messages/messages';
+import { UsersModule } from './users/users.module';
+import { MessagesModule } from './messages/messages.module';
+import { GroupsModule } from './group/groups.module';
 
 @Module({
   imports: [
@@ -18,8 +21,9 @@ import { Messages } from './typeorm/entitys/messages';
       entities: [User, Group, Messages],
       synchronize: true,
     }),
+    UsersModule,
+    MessagesModule,
+    GroupsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

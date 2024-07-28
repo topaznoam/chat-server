@@ -22,7 +22,7 @@ export class MessagesService {
     return this.messagesRepository.save(message);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
     await this.messagesRepository.delete(id);
   }
 }

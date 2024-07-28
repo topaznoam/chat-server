@@ -22,7 +22,7 @@ export class GroupsService {
     return await this.groupsRepository.create(group);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
     await this.groupsRepository.delete(id);
   }
 }

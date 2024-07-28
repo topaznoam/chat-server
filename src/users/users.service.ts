@@ -14,15 +14,30 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOneById(id: number): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-  async create(user: User): Promise<User> {
-    return this.usersRepository.save(user);
+  async findOneByUsername(username: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { username } });
   }
 
-  async remove(id: number): Promise<void> {
+  async logIn(username: string, password: string): Promise<number | null> {
+    const user = await this.findOneByUsername(username);
+    return user && user.password === password ? user.id : null;
+  }
+
+  async create(user: User): Promise<number> {
+    const newUser = await this.usersRepository.save(user);
+    return newUser.id;
+  }
+
+  async SignUp(user: User): Promise<number | null> {
+    const isUser = await this.findOneByUsername(user.username);
+    return isUser ? null : this.create(user);
+  }
+
+  async remove(id: number) {
     await this.usersRepository.delete(id);
   }
 }

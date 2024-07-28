@@ -13,12 +13,29 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: number): Promise<User> {
-    return this.usersService.findOne(id);
+    return this.usersService.findOneById(id);
   }
 
-  @Post()
-  create(@Body() user: User): Promise<User> {
-    return this.usersService.create(user);
+  @Post('signup')
+  async create(@Body() user: User): Promise<number | null> {
+    console.log(user);
+    const userId = await this.usersService.SignUp(user);
+    if (userId === null) {
+      throw new Error('User already exists');
+    }
+    return userId;
+  }
+
+  @Post('login')
+  async login(
+    @Body() user: { username: string; password: string },
+  ): Promise<number | null> {
+    console.log(user);
+    const userId = await this.usersService.logIn(user.username, user.password);
+    if (userId === null) {
+      throw new Error('Invalid credentials');
+    }
+    return userId;
   }
 
   @Delete(':id')

@@ -7,14 +7,9 @@ import { CreateMessageDto } from './create-message.dto';
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @Get()
-  findAll(): Promise<Messages[]> {
-    return this.messagesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<Messages> {
-    return this.messagesService.findOne(id);
+  @Get(':groupId')
+  findAll(@Param('groupId') groupId: number): Promise<Messages[]> {
+    return this.messagesService.findMessagesByGroupId(groupId);
   }
 
   @Post()

@@ -27,6 +27,22 @@ export class MessagesService {
     return this.messagesRepository.findOne({ where: { id } });
   }
 
+  async findMessagesByGroupId(groupId: number): Promise<any[]> {
+    const messages = await this.messagesRepository
+      .createQueryBuilder('messages')
+      .leftJoinAndSelect('messages.user', 'user')
+      .leftJoinAndSelect('messages.group', 'group')
+      .where('messages.groupId = :groupId', { groupId })
+      .getMany();
+
+    return messages.map((message) => ({
+      id: message.id,
+      text: message.data,
+      time: message.time,
+      senderusername: message.user.username,
+      groupId: message.group.id,
+    }));
+  }
   async create(createMessageDto: CreateMessageDto): Promise<Messages> {
     const user = await this.userRepository.findOne({
       where: { id: createMessageDto.user },

@@ -18,14 +18,17 @@ export class GroupsService {
     return await this.groupsRepository.find();
   }
 
-  async findOne(id: number): Promise<Group> {
-    return await this.groupsRepository.findOne({ where: { id } });
+  async findMyGroups(userId: number): Promise<Group[]> {
+    const groups = await this.groupsRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.users', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
+    return groups;
   }
 
   async create(group: Group): Promise<Group> {
-    console.log(group.users);
     const users = await this.usersRepository.findByIds(group.users);
-    console.log(users);
     const newGroup = this.groupsRepository.create({
       ...group,
       users: users,

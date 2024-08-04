@@ -20,10 +20,10 @@ export class Group {
   @Column()
   avatar: string;
 
-  @OneToMany(() => Messages, (messeges) => messeges.group)
-  messeges: Messages[];
+  @OneToMany(() => Messages, (messages) => messages.group)
+  messages: Messages[];
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.groups)
   @JoinTable()
-  user: User;
+  users: User[];
 }

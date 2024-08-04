@@ -16,9 +16,9 @@ export class Messages {
   @Column()
   date: Date;
 
-  @ManyToOne(() => User, (user) => user.messeges)
+  @ManyToOne(() => User, (user) => user.messages)
   user: User;
 
-  @ManyToOne(() => Group, (group) => group.messeges)
+  @ManyToOne(() => Group, (group) => group.messages)
   group: Group;
 }

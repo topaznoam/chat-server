@@ -33,6 +33,7 @@ export class MessagesService {
       .leftJoinAndSelect('messages.user', 'user')
       .leftJoinAndSelect('messages.group', 'group')
       .where('messages.groupId = :groupId', { groupId })
+      .orderBy('messages.id', 'ASC')
       .getMany();
 
     return messages.map((message) => ({
@@ -58,7 +59,6 @@ export class MessagesService {
     const message = new Messages();
     message.data = createMessageDto.data;
     message.time = new Date().toLocaleTimeString();
-    message.date = new Date();
     message.user = user;
     message.group = group;
 

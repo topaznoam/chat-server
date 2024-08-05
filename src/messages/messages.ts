@@ -13,9 +13,6 @@ export class Messages {
   @Column()
   time: string;
 
-  @Column()
-  date: Date;
-
   @ManyToOne(() => User, (user) => user.messages)
   user: User;
 

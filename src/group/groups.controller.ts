@@ -11,8 +11,8 @@ export class GroupsController {
     return this.groupsService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Group> {
-    return this.groupsService.findOne(id);
+  findOne(@Param('id') id: number): Promise<Group[]> {
+    return this.groupsService.findMyGroups(id);
   }
 
   @Post()

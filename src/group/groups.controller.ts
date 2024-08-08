@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { Group } from './groups';
 
@@ -18,6 +26,14 @@ export class GroupsController {
   @Post()
   create(@Body() group: Group): Promise<Group> {
     return this.groupsService.create(group);
+  }
+
+  @Put(':id/img')
+  async updateImg(
+    @Param('id') id: number,
+    @Body() body: { imageSrc: string },
+  ): Promise<void> {
+    await this.groupsService.updateImg(id, body.imageSrc);
   }
 
   @Delete(':id')

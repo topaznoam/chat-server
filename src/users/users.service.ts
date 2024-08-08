@@ -27,19 +27,23 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { username } });
   }
 
-  async logIn(username: string, password: string): Promise<number | null> {
+  async logIn(username: string, password: string): Promise<User | null> {
     const user = await this.findOneByUsername(username);
-    return user && user.password === password ? user.id : null;
+    return user && user.password === password ? user : null;
   }
 
-  async create(user: User): Promise<number> {
+  async create(user: User): Promise<User> {
     const newUser = await this.usersRepository.save(user);
-    return newUser.id;
+    return newUser;
   }
 
-  async SignUp(user: User): Promise<number | null> {
+  async SignUp(user: User): Promise<User | null> {
     const isUser = await this.findOneByUsername(user.username);
     return isUser ? null : this.create(user);
+  }
+
+  async updateImg(id: number, img: string): Promise<void> {
+    await this.usersRepository.update(id, { avatar: img });
   }
 
   async remove(id: number) {

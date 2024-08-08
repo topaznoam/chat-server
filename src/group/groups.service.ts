@@ -36,6 +36,10 @@ export class GroupsService {
     return await this.groupsRepository.save(newGroup);
   }
 
+  async updateImg(id: number, img: string): Promise<void> {
+    await this.groupsRepository.update(id, { avatar: img });
+  }
+
   async remove(id: number) {
     await this.groupsRepository.delete(id);
   }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './users';
 
@@ -17,25 +25,33 @@ export class UsersController {
   }
 
   @Post('signup')
-  async create(@Body() user: User): Promise<number | null> {
+  async create(@Body() user: User): Promise<User | null> {
     console.log(user);
-    const userId = await this.usersService.SignUp(user);
-    if (userId === null) {
+    const myuser = await this.usersService.SignUp(user);
+    if (myuser === null) {
       throw new Error('User already exists');
     }
-    return userId;
+    return myuser;
   }
 
   @Post('login')
   async login(
     @Body() user: { username: string; password: string },
-  ): Promise<number | null> {
+  ): Promise<User | null> {
     console.log(user);
-    const userId = await this.usersService.logIn(user.username, user.password);
-    if (userId === null) {
+    const myuser = await this.usersService.logIn(user.username, user.password);
+    if (myuser === null) {
       throw new Error('Invalid credentials');
     }
-    return userId;
+    return myuser;
+  }
+
+  @Put(':id/img')
+  async updateImg(
+    @Param('id') id: number,
+    @Body() body: { imageSrc: string },
+  ): Promise<void> {
+    await this.usersService.updateImg(id, body.imageSrc);
   }
 
   @Delete(':id')

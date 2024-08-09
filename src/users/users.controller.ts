@@ -26,7 +26,6 @@ export class UsersController {
 
   @Post('signup')
   async create(@Body() user: User): Promise<User | null> {
-    console.log(user);
     const myuser = await this.usersService.SignUp(user);
     if (myuser === null) {
       throw new Error('User already exists');
@@ -38,7 +37,6 @@ export class UsersController {
   async login(
     @Body() user: { username: string; password: string },
   ): Promise<User | null> {
-    console.log(user);
     const myuser = await this.usersService.logIn(user.username, user.password);
     if (myuser === null) {
       throw new Error('Invalid credentials');

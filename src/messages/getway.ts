@@ -28,7 +28,6 @@ export class MyGateway implements OnModuleInit {
       socketGroupList.push(newGroup);
 
       socket.on('newMessage', async (body: any) => {
-        console.log('Received message:', body);
         if (body.groupId && Object.keys(body).length == 1) {
           const socketGroup = socketGroupList.find(
             (socketForGroup) => socketForGroup.socket.id === socket.id,

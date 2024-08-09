@@ -23,6 +23,7 @@ export class GroupsService {
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.users', 'user')
       .where('user.id = :userId', { userId })
+      .orderBy('group.id', 'ASC')
       .getMany();
     return groups;
   }

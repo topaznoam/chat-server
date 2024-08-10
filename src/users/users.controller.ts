@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  Put,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './users';
 
@@ -17,11 +9,6 @@ export class UsersController {
   @Get()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<User> {
-    return this.usersService.findOneById(id);
   }
 
   @Post('signup')
@@ -50,10 +37,5 @@ export class UsersController {
     @Body() body: { imageSrc: string },
   ): Promise<void> {
     await this.usersService.updateImg(id, body.imageSrc);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.usersService.remove(id);
   }
 }

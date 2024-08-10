@@ -20,10 +20,6 @@ export class UsersService {
     }));
   }
 
-  async findOneById(id: number): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id } });
-  }
-
   async findOneByUsername(username: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { username } });
   }
@@ -50,9 +46,5 @@ export class UsersService {
 
   async updateImg(id: number, img: string): Promise<void> {
     await this.usersRepository.update(id, { avatar: img });
-  }
-
-  async remove(id: number) {
-    await this.usersRepository.delete(id);
   }
 }

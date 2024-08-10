@@ -19,14 +19,6 @@ export class MessagesService {
     private readonly groupRepository: Repository<Group>,
   ) {}
 
-  async findAll(): Promise<Messages[]> {
-    return this.messagesRepository.find();
-  }
-
-  async findOne(id: number): Promise<Messages> {
-    return this.messagesRepository.findOne({ where: { id } });
-  }
-
   async findMessagesByGroupId(groupId: number): Promise<any[]> {
     const messages = await this.messagesRepository
       .createQueryBuilder('messages')
@@ -63,9 +55,5 @@ export class MessagesService {
     message.group = group;
 
     return this.messagesRepository.save(message);
-  }
-
-  async remove(id: number) {
-    await this.messagesRepository.delete(id);
   }
 }

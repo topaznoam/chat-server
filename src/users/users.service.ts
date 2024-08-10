@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from './users';
 
 @Injectable()
@@ -19,20 +20,21 @@ export class UsersService {
     }));
   }
 
-  async findOneById(id: number): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id } });
-  }
-
   async findOneByUsername(username: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { username } });
   }
 
   async logIn(username: string, password: string): Promise<User | null> {
     const user = await this.findOneByUsername(username);
-    return user && user.password === password ? user : null;
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+    return null;
   }
 
   async create(user: User): Promise<User> {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
     const newUser = await this.usersRepository.save(user);
     return newUser;
   }
@@ -44,9 +46,5 @@ export class UsersService {
 
   async updateImg(id: number, img: string): Promise<void> {
     await this.usersRepository.update(id, { avatar: img });
-  }
-
-  async remove(id: number) {
-    await this.usersRepository.delete(id);
   }
 }

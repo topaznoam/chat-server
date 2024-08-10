@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { Messages } from './messages';
 import { CreateMessageDto } from './create-message.dto';
@@ -15,10 +15,5 @@ export class MessagesController {
   @Post()
   create(@Body() createMessageDto: CreateMessageDto): Promise<Messages> {
     return this.messagesService.create(createMessageDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.messagesService.remove(id);
   }
 }

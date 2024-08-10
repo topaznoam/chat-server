@@ -14,15 +14,12 @@ export class GroupsService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<Group[]> {
-    return await this.groupsRepository.find();
-  }
-
   async findMyGroups(userId: number): Promise<Group[]> {
     const groups = await this.groupsRepository
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.users', 'user')
       .where('user.id = :userId', { userId })
+      .orderBy('group.id', 'ASC')
       .getMany();
     return groups;
   }
@@ -38,9 +35,5 @@ export class GroupsService {
 
   async updateImg(id: number, img: string): Promise<void> {
     await this.groupsRepository.update(id, { avatar: img });
-  }
-
-  async remove(id: number) {
-    await this.groupsRepository.delete(id);
   }
 }

@@ -1,9 +1,5 @@
 import { OnModuleInit, Injectable } from '@nestjs/common';
-import {
-  MessageBody,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from './messages.service';
 
@@ -28,7 +24,6 @@ export class MyGateway implements OnModuleInit {
       socketGroupList.push(newGroup);
 
       socket.on('newMessage', async (body: any) => {
-        console.log('Received message:', body);
         if (body.groupId && Object.keys(body).length == 1) {
           const socketGroup = socketGroupList.find(
             (socketForGroup) => socketForGroup.socket.id === socket.id,

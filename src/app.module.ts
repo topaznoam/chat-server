@@ -6,23 +6,21 @@ import { Messages } from './messages/messages';
 import { UsersModule } from './users/users.module';
 import { MessagesModule } from './messages/messages.module';
 import { GroupsModule } from './group/groups.module';
-import {
-  DATABASE_HOST,
-  DATABASE_PORT,
-  DATABASE_USERNAME,
-  DATABASE_PASSWORD,
-  DATABASE_NAME,
-} from './Constant';
+import { ROOT_DIR } from './Constant';
+import { config } from 'dotenv';
+import { join } from 'node:path';
+
+config({ path: join(ROOT_DIR, './.env') });
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: DATABASE_HOST,
-      port: DATABASE_PORT,
-      username: DATABASE_USERNAME,
-      password: DATABASE_PASSWORD,
-      database: DATABASE_NAME,
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT, 10),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [User, Group, Messages],
       synchronize: true,
     }),

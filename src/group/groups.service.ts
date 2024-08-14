@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Group } from './groups';
 import { User } from 'src/users/users';
 
@@ -15,17 +15,26 @@ export class GroupsService {
   ) {}
 
   async findMyGroups(userId: number): Promise<Group[]> {
-    const groups = await this.groupsRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.users', 'user')
-      .where('user.id = :userId', { userId })
-      .orderBy('group.id', 'ASC')
-      .getMany();
-    return groups;
+    const userGroups = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['groups'],
+    });
+
+    if (!userGroups) {
+      return [];
+    }
+
+    const groupIds = userGroups.groups.map((group) => group.id);
+
+    return await this.groupsRepository.findBy({
+      id: In(groupIds),
+    });
   }
 
   async create(group: Group): Promise<Group> {
-    const users = await this.usersRepository.findByIds(group.users);
+    const users = await this.usersRepository.findBy({
+      id: In(group.users),
+    });
     const newGroup = this.groupsRepository.create({
       ...group,
       users: users,

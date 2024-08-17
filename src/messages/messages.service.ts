@@ -5,6 +5,8 @@ import { Messages } from './messages';
 import { User } from '../users/users';
 import { Group } from '../group/groups';
 import { CreateMessageDto } from './create-message.dto';
+import { promises } from 'node:dns';
+import { generateSummary } from './GptApi';
 
 @Injectable()
 export class MessagesService {
@@ -19,14 +21,18 @@ export class MessagesService {
     private readonly groupRepository: Repository<Group>,
   ) {}
 
-  async findMessagesByGroupId(groupId: number): Promise<any[]> {
-    const messages = await this.messagesRepository
+  async getAllMessgesInGroup(groupId: number) {
+    return await this.messagesRepository
       .createQueryBuilder('messages')
       .leftJoinAndSelect('messages.user', 'user')
       .leftJoinAndSelect('messages.group', 'group')
       .where('messages.groupId = :groupId', { groupId })
       .orderBy('messages.id', 'ASC')
       .getMany();
+  }
+
+  async findMessagesByGroupId(groupId: number): Promise<any[]> {
+    const messages = await this.getAllMessgesInGroup(groupId);
 
     return messages.map((message) => ({
       id: message.id,
@@ -36,6 +42,7 @@ export class MessagesService {
       groupId: message.group.id,
     }));
   }
+
   async create(createMessageDto: CreateMessageDto): Promise<Messages> {
     const user = await this.userRepository.findOne({
       where: { id: createMessageDto.user },
@@ -55,5 +62,13 @@ export class MessagesService {
     message.group = group;
 
     return this.messagesRepository.save(message);
+  }
+  async summaryMessagesByGroupId(groupId: number): Promise<string> {
+    const messages = await this.getAllMessgesInGroup(groupId);
+    let data = '';
+    messages.forEach((message) => {
+      data += `sender: ${message.user.username} text: ${message.data}\n`;
+    });
+    return generateSummary(data);
   }
 }

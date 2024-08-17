@@ -16,4 +16,8 @@ export class MessagesController {
   create(@Body() createMessageDto: CreateMessageDto): Promise<Messages> {
     return this.messagesService.create(createMessageDto);
   }
+  @Post(':groupId')
+  summeryMassages(@Param('groupId') groupId: number): Promise<string> {
+    return this.messagesService.summaryMessagesByGroupId(groupId);
+  }
 }

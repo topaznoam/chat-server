@@ -4,9 +4,9 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import { Messages } from '../messages/messages';
+import { Group } from '../group/groups';
 
 @Entity()
 export class User {
@@ -22,6 +22,9 @@ export class User {
   @Column()
   avatar: string;
 
-  @OneToMany(() => Messages, (messeges) => messeges.user)
-  messeges: Messages[];
+  @OneToMany(() => Messages, (messages) => messages.user)
+  messages: Messages[];
+
+  @ManyToMany(() => Group, (group) => group.users)
+  groups: Group[];
 }
